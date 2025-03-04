@@ -1,6 +1,11 @@
 #!/bin/zsh zsh
 
-if i_can_only_run_on "local"; then
+ LOCAL_ONLY=false
+if [[ "$IAM" == "$LOCAL_MACHINE_NAME" ]]; then
+  LOCAL_ONLY=true
+fi
+
+if [[ "$LOCAL_ONLY" != true ]]; then
   echo "You can not run this command in this environment."
   return
 fi

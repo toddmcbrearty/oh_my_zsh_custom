@@ -2,23 +2,25 @@
 
 ## Overview
 
-This project contains custom configurations, functions, aliases, and autocompletes designed to extend the functionality of the `oh-my-zsh` shell. The directory structure primarily supports custom scripts, aliases, and functions for optimized terminal usage.
+This project contains custom configurations, functions, aliases, and autocompletes designed to extend the functionality
+of the `oh-my-zsh` shell. The directory structure primarily supports custom scripts, aliases, and functions for
+optimized terminal usage.
 
 ---
 
 ## Project Structure
 
 ### **Functions**
+
 1. **`functions/to`**  
-   Custom function related to a likely navigation utility. This script may serve as a tool for quick navigation between directories.
+   Custom function related to a likely navigation utility. This script may serve as a tool for quick navigation between
+   directories.
 
 2. **`functions/push_custom_zsh`**  
    A function possibly used for managing or pushing custom `.zsh` configurations to a repository or another environment.
 
-3. **`functions/i_can_only_run_on`**  
-   Potentially a script to enforce restrictions on where a specific function or script can be executed, based on the environment.
-
 ### **Aliases**
+
 1. **`aliases/git`**  
    A collection of custom `git` command aliases to simplify or shorten common Git operations.
 
@@ -32,12 +34,15 @@ This project contains custom configurations, functions, aliases, and autocomplet
    Aliases optimized for local development or operations.
 
 ### **Autocompletes**
+
 1. **`autocompletes/_to`**  
    Related to the `to` command/function, this file likely enhances its functionality with autocompletion capabilities.
 
 ### **Metadata**
+
 1. **`loader.zsh`**  
-   Acts as a central script to load all custom functions, aliases, and autocompletes. This file ensures the entire configuration is correctly sourced when the shell starts.
+   Acts as a central script to load all custom functions, aliases, and autocompletes. This file ensures the entire
+   configuration is correctly sourced when the shell starts.
 
 ---
 

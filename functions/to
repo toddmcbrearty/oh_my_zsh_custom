@@ -1,38 +1,17 @@
 #!/bin/zsh zsh
 
 function to () {
-  if [[ -z "$ROOT_CODE_DIR" || "$ROOT_CODE_DIR" == "" ]]; then
-    echo "A ROOT_CODE_DIR env variable must be set in ~/.oh-my-zsh/custom/env.zsh"
-    echo "Would you like to add one now? (default: Y)"
-    read -r createRootCodeDir
-    createRootCodeDir="${createRootCodeDir:-Y}"
+  ON_LOCAL=false
+  ON_REMOTE=false
 
-    if [[ "$createRootCodeDir" == "Y" || "$createRootCodeDir" == "y" ]]; then
-        echo "Enter the path to the root code directory: "
-        read -r rootCodeDir
-        expandedRootCodeDir=$(eval echo "$rootCodeDir")
+  if [[ "$IAM" == "$LOCAL_MACHINE_NAME" ]]; then
+    ON_LOCAL=true
+  elif [[ "$IAM" == "$REMOTE_MACHINE_NAME" ]]; then
+    ON_REMOTE=true
+  fi
 
-        if [[ ! -d "$expandedRootCodeDir" ]]; then
-          echo "The directory does not exist. Please enter a valid directory."
-          return
-        fi
-
-        echo "What is your preferred editor? (default: phpstorm)"
-        read -r editor
-        editor="${editor:-phpstorm}"
-
-        if [[ ! -d "$ZSH_CUSTOM/env.zsh" ]]; then
-          touch "$ZSH_CUSTOM/env.zsh"
-          printf "export ROOT_CODE_DIR=%s\nexport EDITOR=%s" "$expandedRootCodeDir" "$editor" > "$ZSH_CUSTOM/env.zsh"
-        else
-          sed -i "" "s|ROOT_CODE_DIR=.*$|ROOT_CODE_DIR=$expandedRootCodeDir|" "$ZSH_CUSTOM/env.zsh"
-          sed -i "" "s|EDITOR=.*$|EDITOR=$editor|" "$ZSH_CUSTOM/env.zsh"
-        fi
-
-        #shellcheck source=$ZSH_CUSTOM/loader.zsh
-        source "$ZSH_CUSTOM/loader.zsh"
-        echo "You're ready to go. Try running the command again."
-    fi
+  if [[ -z "$ROOT_CODE_DIR" ]]; then
+    echo "ROOT_CODE_DIR is not set. Please set it in '~/.oh-my-zsh/env.zsh'."
     return
   fi
 
@@ -76,7 +55,7 @@ EOF
   OPEN_PSTORM=false
   PROJECT="$1"
 
-  if i_can_only_run_on "local"; then
+  if [[ "$ON_LOCAL" == true ]]; then
     if [[ "$1" == "ordersite" ]]; then
         PROJECT="ordersite/dev/api"
     fi
@@ -84,11 +63,10 @@ EOF
     if [[ "$1" == "admin" ]]; then
         PROJECT="admin/site"
     fi
-  elif i_can_only_run_on "remote"; then
+  elif [[ "$ON_REMOTE" == true ]]; then
     if [[ "$1" == "giftogram-order-site" || "$1" == "ordersite"  || "$1" == "order" ]]; then
         PROJECT="giftogram-order-site/dev/api"
     fi
-
     if [[ "$1" == "api" ]]; then
         PROJECT="gg-api"
     fi
@@ -117,13 +95,11 @@ EOF
   echo "Moving to: $CODE_DIR"
   cd "$CODE_DIR" || exit 1;
 
-  ONLY_RUN_ON_LOCAL=$(i_can_only_run_on "local" )
-
-  if [[ "$ONLY_RUN_ON_LOCAL" == 0 && "$OPEN_PSTORM" == true ]]; then
+  if [[ "$ON_LOCAL" == false  && "$OPEN_PSTORM" == true ]]; then
     echo "Can not open directory in PHPStorm in this environment."
   fi
 
-  if [[ "$ONLY_RUN_ON_LOCAL" == 1 && "$OPEN_PSTORM" == true ]]; then
+  if [[ "$ON_LOCAL" == true && "$OPEN_PSTORM" == true ]]; then
     phpstorm .
   fi
 }

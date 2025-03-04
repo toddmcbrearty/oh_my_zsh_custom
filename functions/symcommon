@@ -1,5 +1,16 @@
 #!/bin/zsh zsh
 function symcommon() {
+   LOCAL_ONLY=false
+
+  if [[ "$IAM" == "$LOCAL_MACHINE_NAME" ]]; then
+    LOCAL_ONLY=true
+  fi
+
+  if [[ "$LOCAL_ONLY" != true ]]; then
+    echo "You can not run this command in this environment."
+    return
+  fi
+
     if [[ ! -f artisan ]]; then
         echo "I can't find artisan. Are you sure you want to run this here?"
         return
