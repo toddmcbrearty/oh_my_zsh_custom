@@ -1,0 +1,6 @@
+#!/bin/bash bash
+alias updategg="composer update giftogram/gg-common"
+alias ggupdate="updategg"
+alias updategg-sym="updategg && symcommon"
+alias arti="php artisan"
+

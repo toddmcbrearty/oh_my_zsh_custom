@@ -1,0 +1,6 @@
+#!/bin/zsh zsh
+
+alias srczsh="source \$HOME/.zshrc"
+alias zshrc="\$EDITOR \$HOME/.zshrc"
+alias omzdir="\$EDITOR \$HOME/.oh-my-zsh"
+alias omzcustom="\$EDITOR \$HOME/.oh-my-zsh/custom"

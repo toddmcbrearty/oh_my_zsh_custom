@@ -1,0 +1,25 @@
+#!/bin/zsh zsh
+
+pest() {
+  if [[ ! -f "vendor/bin/pest" ]]; then
+    echo "Pest not found"
+    return
+  fi
+
+  flags=()
+  # Loop through all arguments
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      -s)
+        flags+=("--stop-on-error")
+        ;;
+      -*)
+        # If the argument starts with a '-', treat it as a flag
+        flags+=("$1")
+        ;;
+    esac
+    shift
+  done
+
+  vendor/bin/pest "${flags[@]}"
+}

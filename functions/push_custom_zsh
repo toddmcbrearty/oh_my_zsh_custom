@@ -1,0 +1,27 @@
+#!/bin/zsh zsh
+
+if i_can_only_run_on "local"; then
+  echo "You can not run this command in this environment."
+  return
+fi
+
+# Define source and destination paths
+REMOTE_ALIAS="c9"
+REMOTE_PATH="/home/ubuntu/.oh-my-zsh/custom"
+LOCAL_PATH="$HOME/.oh-my-zsh/custom"
+
+# Check if the source directory exists
+if [[ ! -d "$LOCAL_PATH" ]]; then
+  echo "Local directory $LOCAL_PATH does not exist. Exiting."
+  exit 1
+fi
+
+# Use rsync to copy files securely via SSH
+rsync -avz --progress --exclude "env.zsh" --exclude "aliases/local" "$LOCAL_PATH/" "$REMOTE_ALIAS:$REMOTE_PATH"
+
+# Print success message
+if [[ $? -eq 0 ]]; then
+  echo "Files successfully copied from $LOCAL_PATH to $REMOTE_ALIAS:$REMOTE_PATH"
+else
+  echo "Error occurred during file transfer."
+fi

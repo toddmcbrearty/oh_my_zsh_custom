@@ -1,0 +1,18 @@
+#!/bin/zsh zsh
+
+function i_can_only_run_on() {
+  if [[ "$1" == 'local' ]]; then
+    UR="$LOCAL_MACHINE_NAME"
+  elif [[ "$1" == 'remote' ]]; then
+    UR="$REMOTE_MACHINE_NAME"
+  else
+    echo "Invalid machine name $1. Must be 'local' or 'remote'."
+    return 0
+  fi
+
+  if [[ "$IAM" != "$UR" ]]; then
+    return 0
+  else
+    return 1
+  fi
+}

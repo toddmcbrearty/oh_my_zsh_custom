@@ -1,0 +1,6 @@
+#!/bin/zsh zsh
+
+if i_can_only_run_on "local"; then
+  alias sr="to frontend && nvm use && npm run dev"
+
+fi

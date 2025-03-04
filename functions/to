@@ -1,0 +1,130 @@
+#!/bin/zsh zsh
+
+function to () {
+  if [[ -z "$ROOT_CODE_DIR" || "$ROOT_CODE_DIR" == "" ]]; then
+    echo "A ROOT_CODE_DIR env variable must be set in ~/.oh-my-zsh/custom/env.zsh"
+    echo "Would you like to add one now? (default: Y)"
+    read -r createRootCodeDir
+    createRootCodeDir="${createRootCodeDir:-Y}"
+
+    if [[ "$createRootCodeDir" == "Y" || "$createRootCodeDir" == "y" ]]; then
+        echo "Enter the path to the root code directory: "
+        read -r rootCodeDir
+        expandedRootCodeDir=$(eval echo "$rootCodeDir")
+
+        if [[ ! -d "$expandedRootCodeDir" ]]; then
+          echo "The directory does not exist. Please enter a valid directory."
+          return
+        fi
+
+        echo "What is your preferred editor? (default: phpstorm)"
+        read -r editor
+        editor="${editor:-phpstorm}"
+
+        if [[ ! -d "$ZSH_CUSTOM/env.zsh" ]]; then
+          touch "$ZSH_CUSTOM/env.zsh"
+          printf "export ROOT_CODE_DIR=%s\nexport EDITOR=%s" "$expandedRootCodeDir" "$editor" > "$ZSH_CUSTOM/env.zsh"
+        else
+          sed -i "" "s|ROOT_CODE_DIR=.*$|ROOT_CODE_DIR=$expandedRootCodeDir|" "$ZSH_CUSTOM/env.zsh"
+          sed -i "" "s|EDITOR=.*$|EDITOR=$editor|" "$ZSH_CUSTOM/env.zsh"
+        fi
+
+        #shellcheck source=$ZSH_CUSTOM/loader.zsh
+        source "$ZSH_CUSTOM/loader.zsh"
+        echo "You're ready to go. Try running the command again."
+    fi
+    return
+  fi
+
+  if [[ "$1" == "help" ]]; then
+      cat <<EOF
+    Usage: to [OPTIONS] <project_name>
+
+    This script navigates to project directories based on predefined rules and can optionally open the directory in PHPStorm for specific users.
+
+    Arguments:
+      project_name       Name of the project to navigate to. Matches specific keywords to determine the correct directory.
+
+    Options:
+      -p                 Open the directory in PHPStorm (only works in the "todd" user environment).
+      --                 Indicates the end of options.
+
+    Environment Variables:
+      ROOT_CODE_DIR      This variable must be set. Represents the root directory containing the project folders.
+                         Ensure it is set in '~/.oh-my-zsh/loader.sh'.
+      IAM                Identifies the current user.
+                         Options:
+                           - "todd": Allows opening projects in PHPStorm.
+                           - "ubuntu": Uses specific rules to map project names to directories.
+
+    Examples:
+      to ordersite       Navigate to the "ordersite" project directory.
+      to -p admin        Navigate to the "admin" project directory and open it in PHPStorm (only if IAM='todd').
+
+    Autocompletion:
+      - This script supports tab autocompletion for project names and the `-p` option.
+      - Autocompletion derives directories from the contents of the ROOT_CODE_DIR variable.
+
+    Notes:
+      - If the project directory does not exist, an error will be displayed.
+      - If the ROOT_CODE_DIR variable is not set, the script will abort with a message.
+
+EOF
+    return
+  fi
+
+  OPEN_PSTORM=false
+  PROJECT="$1"
+
+  if i_can_only_run_on "local"; then
+    if [[ "$1" == "ordersite" ]]; then
+        PROJECT="ordersite/dev/api"
+    fi
+
+    if [[ "$1" == "admin" ]]; then
+        PROJECT="admin/site"
+    fi
+  elif i_can_only_run_on "remote"; then
+    if [[ "$1" == "giftogram-order-site" || "$1" == "ordersite"  || "$1" == "order" ]]; then
+        PROJECT="giftogram-order-site/dev/api"
+    fi
+
+    if [[ "$1" == "api" ]]; then
+        PROJECT="gg-api"
+    fi
+
+    if [[ "$1" == "giftogram-admin" || "$1" == "admin" ]]; then
+        PROJECT="giftogram-admin/site"
+    fi
+  fi
+
+  CODE_DIR="$ROOT_CODE_DIR/$PROJECT"
+
+  while test $# != 0
+  do
+      case "$1" in
+      -p) OPEN_PSTORM=true ;;
+      --) shift; break;;
+      esac
+      shift
+  done
+
+  if [ ! -d "$CODE_DIR" ]; then
+      echo "\"$CODE_DIR\" not found."
+      return
+  fi
+
+  echo "Moving to: $CODE_DIR"
+  cd "$CODE_DIR" || exit 1;
+
+  ONLY_RUN_ON_LOCAL=$(i_can_only_run_on "local" )
+
+  if [[ "$ONLY_RUN_ON_LOCAL" == 0 && "$OPEN_PSTORM" == true ]]; then
+    echo "Can not open directory in PHPStorm in this environment."
+  fi
+
+  if [[ "$ONLY_RUN_ON_LOCAL" == 1 && "$OPEN_PSTORM" == true ]]; then
+    phpstorm .
+  fi
+}
+

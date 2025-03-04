@@ -1,0 +1,8 @@
+#!/bin/zsh zsh
+
+if i_can_only_run_on "local"; then
+  echo "You can not run this command in this environment."
+  return
+fi
+
+alias toc9="ssh c9"
