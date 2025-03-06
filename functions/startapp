@@ -1,0 +1,23 @@
+#!/bin/zsh zsh
+
+function startapp() {
+  if [[ -z "$1" ]]; then
+    echo "Please provide a name for the app (react, admin)"
+    return
+  fi
+
+  local app
+  app="$1"
+
+  if [[ "$app" == "frontend" ]]; then
+    to "$app"
+    nvm use && npm run dev
+  fi
+
+  if [[ "$app" == "admin" ]]; then
+    to "$app"
+    nvm use && npm run build
+  fi
+
+  echo "App $app not found."
+}

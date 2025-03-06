@@ -1,0 +1,33 @@
+#!/bin/zsh zsh
+
+function gg_common_version() {
+  local composer
+  composer=$(which composer)
+
+  if [[ ! -f "$composer" ]]; then
+    echo 0
+    return
+  fi
+
+  if [[ ! -f './composer.json' ]]; then
+    echo 0
+    return
+  fi
+
+  local gg_comm_exists
+  gg_comm_exists=$(grep '"giftogram/gg-common"' < <(cat "./composer.json"))
+
+  if [[ -z "$gg_comm_exists" ]]; then
+    echo 0
+    return
+  fi
+
+  local res
+  res=$("$composer" show giftogram/gg-common)
+
+  version=$(echo "$res" | sed -n 's/^versions : \** \(.*\)/\1/p')
+
+  echo "$version"
+}
+
+

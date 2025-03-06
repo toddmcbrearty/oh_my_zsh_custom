@@ -1,7 +1,9 @@
 #!/bin/zsh zsh
 
 function to () {
+  local ON_LOCAL
   ON_LOCAL=false
+  local ON_REMOTE
   ON_REMOTE=false
 
   if [[ "$IAM" == "$LOCAL_MACHINE_NAME" ]]; then
@@ -52,7 +54,9 @@ EOF
     return
   fi
 
+  local OPEN_PSTORM
   OPEN_PSTORM=false
+  local PROJECT
   PROJECT="$1"
 
   if [[ "$ON_LOCAL" == true ]]; then
@@ -76,6 +80,7 @@ EOF
     fi
   fi
 
+  local CODE_DIR
   CODE_DIR="$ROOT_CODE_DIR/$PROJECT"
 
   while test $# != 0

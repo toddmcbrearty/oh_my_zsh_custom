@@ -1,3 +1,5 @@
+ZSH_THEME="toddmcb"
+
 IAM=$(whoami)
 
 if [[ -f "$ZSH_CUSTOM/env.zsh" ]]; then
