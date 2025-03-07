@@ -1,6 +1,12 @@
 ZSH_THEME="toddmcb"
 
+
 IAM=$(whoami)
+if [[ "$IAM" == "$LOCAL_MACHINE_NAME" ]]; then
+  plugins=(git gh brew laravel 1password docker docker-compose iterm2 macos npm npx zsh-syntax-highlighting zsh-autosuggestions)
+else
+  plugins=(git docker npm npx zsh-syntax-highlighting zsh-autosuggestions)
+fi
 
 if [[ -f "$ZSH_CUSTOM/env.zsh" ]]; then
   source "$ZSH_CUSTOM/env.zsh"

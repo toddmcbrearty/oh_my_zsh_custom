@@ -16,7 +16,7 @@ function startapp() {
 
   if [[ "$app" == "admin" ]]; then
     to "$app"
-    nvm use && npm run build
+    nvm use && npm run dev
   fi
 
   echo "App $app not found."

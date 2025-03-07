@@ -22,7 +22,7 @@ if [[ ! -d "$LOCAL_PATH" ]]; then
 fi
 
 # Use rsync to copy files securely via SSH
-rsync -avz --progress --exclude "env.zsh" --exclude "aliases/local" "$LOCAL_PATH/" "$REMOTE_ALIAS:$REMOTE_PATH"
+rsync -avz --progress --delete --exclude "env.zsh" --exclude "aliases/local" "$LOCAL_PATH/" "$REMOTE_ALIAS:$REMOTE_PATH"
 
 # Print success message
 if [[ $? -eq 0 ]]; then
