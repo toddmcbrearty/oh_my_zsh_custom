@@ -1,0 +1,15 @@
+#!/bin/zsh zsh
+
+function nvpm() {
+  if [[ ! -f "./package.json" ]]; then
+    echo "Package.json not found."
+    return
+  fi
+
+  if [[ -f "./.nvmrc" ]]; then
+    nvm use && npm "$*"
+    return
+  fi
+
+  npm "$*"
+}
