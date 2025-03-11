@@ -1,3 +1,4 @@
+# shellcheck disable=SC2034
 ZSH_THEME="toddmcb"
 
 
@@ -5,6 +6,7 @@ IAM=$(whoami)
 if [[ "$IAM" == "$LOCAL_MACHINE_NAME" ]]; then
   plugins=(git gh brew laravel 1password docker docker-compose iterm2 macos npm npx zsh-syntax-highlighting zsh-autosuggestions)
 else
+  # shellcheck disable=SC2034
   plugins=(git docker npm npx zsh-syntax-highlighting zsh-autosuggestions)
 fi
 

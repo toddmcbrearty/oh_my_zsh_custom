@@ -9,14 +9,12 @@ function startapp() {
   local app
   app="$1"
 
-  if [[ "$app" == "frontend" ]]; then
-    to "$app"
-    nvm use && npm run dev
-  fi
+  local dev_apps
+  dev_apps=("frontend" "react" "admin")
 
-  if [[ "$app" == "admin" ]]; then
+  if [[ -v dev_apps["$app"] ]]; then
     to "$app"
-    nvm use && npm run dev
+    nvpm run dev
   fi
 
   echo "App $app not found."
