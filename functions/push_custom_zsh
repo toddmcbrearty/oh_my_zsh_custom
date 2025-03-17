@@ -6,6 +6,7 @@ if [[ "$IAM" == "$LOCAL_MACHINE_NAME" ]]; then
 fi
 
 if [[ "$LOCAL_ONLY" != true ]]; then
+  echo "Command: push_custom_zsh"
   echo "You can not run this command in this environment."
   return
 fi
@@ -22,7 +23,7 @@ if [[ ! -d "$LOCAL_PATH" ]]; then
 fi
 
 # Use rsync to copy files securely via SSH
-rsync -avz --progress --delete --exclude "env.zsh" --exclude "aliases/local" "$LOCAL_PATH/" "$REMOTE_ALIAS:$REMOTE_PATH"
+rsync -avz --progress --delete --exclude functions/push_custom_zsh --exclude functions/symcommon --exclude "env.zsh" --exclude "aliases/local" "$LOCAL_PATH/" "$REMOTE_ALIAS:$REMOTE_PATH"
 
 # Print success message
 if [[ $? -eq 0 ]]; then

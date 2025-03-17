@@ -1,6 +1,6 @@
 # shellcheck disable=SC2034
 ZSH_THEME="toddmcb"
-
+#ZSH_THEME="afowler"
 
 IAM=$(whoami)
 if [[ "$IAM" == "$LOCAL_MACHINE_NAME" ]]; then
@@ -53,6 +53,13 @@ export ZSH_FUNCTIONS="$ZSH_CUSTOM/functions"
 export FPATH="$ZSH_CUSTOM/functions:$FPATH"
 
 autoload -U "$ZSH_FUNCTIONS"/*
+autoload -U compinit; compinit
+
+source "$ZSH_CUSTOM/completer.zsh"
+
+
+# shellcheck source=$ZSH_CUSTOM/autocompletes
+source <(cd "$ZSH_CUSTOM/autocompletes" && cat ./*)
 
 # shellcheck source=$ZSH_CUSTOM/aliases
 source <(cd "$ZSH_ALIASES" && cat ./*)

@@ -2,8 +2,7 @@ GG_COMMON_VERSION_CACHE=""
 
 function laravel_prompt_info() {
   if [ -f artisan ]; then
-  version=$(get_cached_gg_common_version)
-
+    version=$(get_cached_gg_common_version)
     echo "
 |  %{$fg[red]%}$(php artisan --version | sed -e 's/Laravel Installer Version //')%{$reset_color%} "
   fi

@@ -7,6 +7,7 @@ function symcommon() {
   fi
 
   if [[ "$LOCAL_ONLY" != true ]]; then
+    echo "Command: symcommon"
     echo "You can not run this command in this environment."
     return
   fi

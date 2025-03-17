@@ -60,12 +60,17 @@ EOF
   PROJECT="$1"
 
   if [[ "$ON_LOCAL" == true ]]; then
+    if [[ "$1" == 'c9api' ]]; then
+      ssh -t c9 "cd /home/ubuntu/environment/gg-api"
+      return
+    fi
+
     if [[ "$1" == "ordersite" ]]; then
-        PROJECT="ordersite/dev/api"
+        PROJECT="giftogram/ordersite/dev/api"
     fi
 
     if [[ "$1" == "admin" ]]; then
-        PROJECT="admin/site"
+        PROJECT="giftogram/admin/site"
     fi
   elif [[ "$ON_REMOTE" == true ]]; then
     if [[ "$1" == "giftogram-order-site" || "$1" == "ordersite"  || "$1" == "order" ]]; then
