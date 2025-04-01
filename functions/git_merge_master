@@ -1,0 +1,24 @@
+#!/bin/zsh zsh
+
+function git_merge_master() {
+  git_status=$(git status | head -n 1 | tr '[:upper:]' '[:lower:]');
+  branch_name=${git_status/on branch/}
+
+  if [[ "$branch_name" == "main" || "$branch_name" == "master" ]]; then
+    echo "You are already $git_status"
+    return;
+  fi
+
+  if [[ "$git_status" == "fatal: not a git repository*" ]]; then
+    echo "No git repository not found."
+    return
+  fi
+
+  if [[ "$git_status" == "Changes not staged for commit:*" ]]; then
+    echo "You have files to commit or shelf first."
+    return
+  fi
+
+  git update-ref refs/heads/master refs/heads/master
+  git merge master
+}

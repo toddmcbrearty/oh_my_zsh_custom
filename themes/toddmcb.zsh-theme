@@ -7,10 +7,11 @@ local conda_prompt='$(conda_prompt_info)'
 local vcs_branch='$(git_prompt_info)$(hg_prompt_info)'
 local laravel_version='$(laravel_prompt_info)'
 local gg_common_version='$(gg_common_version_prompt_info)'
+local node_version='$(node_version_prompt_info)'
 
 ZSH_THEME_RVM_PROMPT_OPTIONS="i v g"
 
-PROMPT="╭─${conda_prompt}${user_host}${current_dir}${vcs_branch}${gg_common_version}${laravel_version}
+PROMPT="╭─${conda_prompt}${user_host}${current_dir}${vcs_branch}${gg_common_version}${laravel_version}${node_version}
 ╰─%B${user_symbol}%b "
 RPROMPT="%B${return_code}%b"
 

@@ -10,6 +10,24 @@ else
   plugins=(git docker npm npx zsh-syntax-highlighting zsh-autosuggestions)
 fi
 
+ON_LOCAL=false
+ON_REMOTE=false
+
+if [[ "$IAM" == "$LOCAL_MACHINE_NAME" ]]; then
+  ON_LOCAL=true
+elif [[ "$IAM" == "$REMOTE_MACHINE_NAME" ]]; then
+  ON_REMOTE=true
+fi
+
+export ON_LOCAL
+export ON_REMOTE
+
+#if [[ "$ON_LOCAL" == true ]]; then
+#  echo "You're on you're local machine."
+#elif [[ "$ON_REMOTE" == true ]]; then
+#  echo "You're on you're remote machine."
+#fi
+
 if [[ -f "$ZSH_CUSTOM/env.zsh" ]]; then
   source "$ZSH_CUSTOM/env.zsh"
 else
@@ -46,7 +64,6 @@ else
   echo "You're ready to go."
 fi
 
-
 export IAM="$IAM"
 export ZSH_ALIASES="$ZSH_CUSTOM/aliases"
 export ZSH_FUNCTIONS="$ZSH_CUSTOM/functions"
@@ -56,7 +73,6 @@ autoload -U "$ZSH_FUNCTIONS"/*
 autoload -U compinit; compinit
 
 source "$ZSH_CUSTOM/completer.zsh"
-
 
 # shellcheck source=$ZSH_CUSTOM/autocompletes
 source <(cd "$ZSH_CUSTOM/autocompletes" && cat ./*)

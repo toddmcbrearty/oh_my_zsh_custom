@@ -1,14 +1,6 @@
 #!/bin/zsh zsh
 
- LOCAL_ONLY=false
-
 if [[ "$IAM" == "$LOCAL_MACHINE_NAME" ]]; then
-  LOCAL_ONLY=true
+  alias toc9="ssh c9"
 fi
 
-if [[ "$LOCAL_ONLY" != true ]]; then
-  echo "You can not run this command in this environment."
-  return
-fi
-
-alias toc9="ssh c9"

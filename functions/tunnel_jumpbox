@@ -1,0 +1,5 @@
+#!/bin/zsh zsh
+
+function tunnel_jumpbox() {
+  ssh -NL 2222:localhost:22 c9
+}

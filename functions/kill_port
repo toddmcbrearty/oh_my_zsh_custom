@@ -1,0 +1,14 @@
+#!/bin/zsh zsh
+
+function kill_port() {
+  local PORT=$1
+  local PID
+  PID=$(lsof -t -i:"$PORT")
+
+  if [[ -n "$PID" ]]; then
+    echo "Killing process on port $PORT with PID $PID"
+    kill -9 $PID
+  else
+    echo "No process found on port $PORT"
+  fi
+}

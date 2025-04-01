@@ -1,0 +1,23 @@
+#!/bin/zsh zsh
+
+function restartapp() {
+  if [[ "${ON_REMOTE}" == true ]]; then
+    echo "You can not restart an app on the remote machine."
+    return
+  fi
+
+  if [[ -n "$1" ]]; then
+    process_ids=$(pgrep "$1")
+
+    echo "Killing processes for $1"
+    while [[ -n "$process_ids" ]]; do
+      killall "$1"
+      process_ids=$(pgrep "$1")
+    done
+
+    echo "Opening $1"
+    open -a "$1"
+  else
+    echo "No process found for $1"
+  fi
+}

@@ -1,0 +1,6 @@
+#!/bin/zsh zsh
+
+function good_morning() {
+  echo "Good morning, $USER!"
+  restartapp "Slack"
+}

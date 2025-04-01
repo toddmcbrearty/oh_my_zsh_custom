@@ -6,15 +6,16 @@ function nvpm() {
     return
   fi
 
-  if [[ -f "./.nvmrc" ]]; then
-    command="$*"
-    if [[ "$command" == "" ]]; then
-      command="install"
-    fi
+  command="${*}"
+  if [[ "$command" == "" ]]; then
+    command="install"
+  fi
 
+  # If there is an .nvmrc file, use nvm to set the node version
+  if [[ -f "./.nvmrc" ]]; then
     nvm use && npm "$command"
     return
   fi
 
-  npm "$*"
+  npm "${*}"
 }

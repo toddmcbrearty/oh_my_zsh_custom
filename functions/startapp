@@ -1,20 +1,40 @@
 #!/bin/zsh zsh
 
 function startapp() {
+  local dev_apps
+  dev_apps=("frontend" "react" "admin")
+
   if [[ -z "$1" ]]; then
-    echo "Please provide a name for the app (react, admin)"
+    echo "Please provide a name for the app (${dev_apps[*]})"
     return
   fi
 
   local app
   app="$1"
+  local use_c9
+  use_c9=false
 
-  local dev_apps
-  dev_apps=("frontend" "react" "admin")
+  if [[ "$1" == "c9" ]]; then
+    if [[ "$2" == "" ]]; then
+      echo "You must provide a name for the app on you c9."
+      return
+    fi
 
-  if [[ -v dev_apps["$app"] ]]; then
-    to "$app"
-    nvpm run dev
+    use_c9=true
+  fi
+
+  command=""
+
+  if [[ "$use_c9" == true ]]; then
+    command="to c9 $1"
+  fi
+
+  if [[ " ${dev_apps[*]} " =~ $app ]]; then
+    if [[ "$command" != "" ]]; then
+      command="$command"
+    fi
+
+    "$command && $app nvpm run dev"
   fi
 
   echo "App $app not found."

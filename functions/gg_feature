@@ -17,7 +17,6 @@ function gg_feature() {
    project_names+=("$line")
  done < <(find "$PROJECT_DIRECTORY" -maxdepth 1 -type d -not -path "." -not -name ".*" -exec basename {} \; | sort)
 
-
   # CREATE A FEATURE BRANCH
   # ask user what project they'll be working (required)
   for i in $(seq 0 $((${#project_names[@]}))); do
