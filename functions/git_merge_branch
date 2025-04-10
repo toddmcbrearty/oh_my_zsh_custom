@@ -1,0 +1,32 @@
+#!/bin/zsh zsh
+
+function git_merge_branch() {
+  local branch="$1"
+
+  if [[ -z "$branch" ]]; then
+    branch="master"
+  fi
+
+  local git_status=$(git status | head -n 1 | tr '[:upper:]' '[:lower:]')
+  local branch_name=${git_status/on branch /}
+
+  if [[ "$branch_name" == "$branch" ]]; then
+    echo "You are already $git_status"
+    return
+  fi
+
+  if [[ "$git_status" == "fatal: not a git repository*" ]]; then
+    echo "No git repository not found."
+    return
+  fi
+
+  if [[ "$git_status" == "Changes not staged for commit:*" ]]; then
+    echo "You have files to commit or shelf first."
+    return
+  fi
+
+  git update-ref "refs/heads/$branch" "refs/heads/$branch"
+
+  echo "$fg[blue]Merging $branch into ${branch_name}${reset_color}"
+  git merge "$branch"
+}

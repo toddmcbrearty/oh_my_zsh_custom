@@ -1,6 +1,6 @@
 #!/bin/zsh zsh
 
- LOCAL_ONLY=false
+LOCAL_ONLY=false
 if [[ "$IAM" == "$LOCAL_MACHINE_NAME" ]]; then
   LOCAL_ONLY=true
 fi
@@ -24,11 +24,12 @@ fi
 
 # Use rsync to copy files securely via SSH
 rsync -avz --progress --delete \
-      --exclude functions/push_custom_zsh \
-      --exclude functions/symcommon \
-      --exclude functions/tunnel_jumpbox \
-      --exclude "env.zsh" \
-      --exclude "aliases/local" "$LOCAL_PATH/" "$REMOTE_ALIAS:$REMOTE_PATH"
+  --exclude functions/good_morning \
+  --exclude functions/push_custom_zsh \
+  --exclude functions/symcommon \
+  --exclude functions/tunnel_jumpbox \
+  --exclude "env.zsh" \
+  --exclude "aliases/local" "$LOCAL_PATH/" "$REMOTE_ALIAS:$REMOTE_PATH"
 
 # Print success message
 if [[ $? -eq 0 ]]; then

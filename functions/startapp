@@ -11,8 +11,6 @@ function startapp() {
 
   local app
   app="$1"
-  local use_c9
-  use_c9=false
 
   if [[ "$1" == "c9" ]]; then
     if [[ "$2" == "" ]]; then
@@ -20,21 +18,12 @@ function startapp() {
       return
     fi
 
-    use_c9=true
-  fi
-
-  command=""
-
-  if [[ "$use_c9" == true ]]; then
-    command="to c9 $1"
+    to c9 "$1" "nvpm run dev"
+    return
   fi
 
   if [[ " ${dev_apps[*]} " =~ $app ]]; then
-    if [[ "$command" != "" ]]; then
-      command="$command"
-    fi
-
-    "$command && $app nvpm run dev"
+    to "$1" && nvpm run dev
   fi
 
   echo "App $app not found."

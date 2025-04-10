@@ -22,12 +22,6 @@ fi
 export ON_LOCAL
 export ON_REMOTE
 
-#if [[ "$ON_LOCAL" == true ]]; then
-#  echo "You're on you're local machine."
-#elif [[ "$ON_REMOTE" == true ]]; then
-#  echo "You're on you're remote machine."
-#fi
-
 if [[ -f "$ZSH_CUSTOM/env.zsh" ]]; then
   source "$ZSH_CUSTOM/env.zsh"
 else
@@ -38,8 +32,8 @@ else
   root_code_dir=$(eval echo "$root_code_dir")
 
   if [[ ! -d "$root_code_dir" ]]; then
-   echo "The directory does not exist. Please enter a valid directory."
-   return
+    echo "The directory does not exist. Please enter a valid directory."
+    return
   fi
 
   echo "What is your preferred editor? (default: phpstorm)"
@@ -57,9 +51,8 @@ else
   echo "export ROOT_CODE_DIR=$root_code_dir
   export EDITOR=$editor
   export LOCAL_MACHINE_NAME=$local_name
-  export REMOTE_MACHINE_NAME=$remote_name" >> "$ZSH_CUSTOM/env.zsh"
+  export REMOTE_MACHINE_NAME=$remote_name" >>"$ZSH_CUSTOM/env.zsh"
 
-  #shellcheck source=$ZSH_CUSTOM/loader.zsh
   source "$ZSH_CUSTOM/loader.zsh"
   echo "You're ready to go."
 fi
@@ -70,13 +63,12 @@ export ZSH_FUNCTIONS="$ZSH_CUSTOM/functions"
 export FPATH="$ZSH_CUSTOM/functions:$FPATH"
 
 autoload -U "$ZSH_FUNCTIONS"/*
-autoload -U compinit; compinit
+autoload -U compinit
+compinit
 
 source "$ZSH_CUSTOM/completer.zsh"
 
-# shellcheck source=$ZSH_CUSTOM/autocompletes
 source <(cd "$ZSH_CUSTOM/autocompletes" && cat ./*)
 
-# shellcheck source=$ZSH_CUSTOM/aliases
 source <(cd "$ZSH_ALIASES" && cat ./*)
 chmod +x <(cd "$ZSH_ALIASES" && cat ./*)

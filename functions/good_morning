@@ -2,5 +2,6 @@
 
 function good_morning() {
   echo "Good morning, $USER!"
+  say "Good morning, You awesome man you!"
   restartapp "Slack"
 }

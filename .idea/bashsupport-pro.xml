@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="bashsupport-pro.project">
+    <globalVariables>
+      <var name="reset_color" />
+      <var name="fg" />
+      <var name="green" />
+    </globalVariables>
+  </component>
+</project>

@@ -1,0 +1,7 @@
+alias p="phpstorm"
+
+alias papi="to api -p"
+alias porder="to order -p"
+alias pcommon="to common -p"
+alias padmin="to admin -p"
+alias preact="to react -p"

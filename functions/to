@@ -1,13 +1,13 @@
 #!/bin/zsh zsh
 
-function to () {
+function to() {
   if [[ -z "$ROOT_CODE_DIR" ]]; then
     echo "ROOT_CODE_DIR is not set. Please set it in '~/.oh-my-zsh/env.zsh'."
     return
   fi
 
   if [[ "$1" == "help" ]]; then
-      cat <<EOF
+    cat <<EOF
     Usage: to [OPTIONS] <project_name>
 
     This script navigates to project directories based on predefined rules and can optionally open the directory in PHPStorm for specific users.
@@ -32,7 +32,7 @@ function to () {
       to -p admin        Navigate to the "admin" project directory and open it in PHPStorm (only if IAM='todd').
 
     Autocompletion:
-      - This script supports tab autocompletion for project names and the `-p` option.
+      - This script supports tab autocompletion for project names and the $(-p) option.
       - Autocompletion derives directories from the contents of the ROOT_CODE_DIR variable.
 
     Notes:
@@ -43,96 +43,75 @@ EOF
     return
   fi
 
-  local OPEN_PSTORM
-  OPEN_PSTORM=false
-  local PROJECT
-  PROJECT="$1"
+  local command=""
+  local open_pstorm=false
+  local start_app=false
+  local restart_app=false
+  local code_dir="$1"
+  local code_dir="$ROOT_CODE_DIR/$code_dir"
 
   if [[ "${ON_LOCAL}" == true ]]; then
-    if [[ "$1" = 'c9' ]]; then
-      command="cd /home/ubuntu/environment;"
-
-      if [[ "$2" == "api" ]]; then
-        command="cd /home/ubuntu/environment/gg-api;"
-      fi
-
-      if [[ "$2" == "admin" ]]; then
-        command="cd /home/ubuntu/environment/giftogram-admin/site;"
-      fi
-
-      if [[ "$2" == "ordersite" ]]; then
-        command="cd /home/ubuntu/environment/giftogram-order-site/dev/api;"
-      fi
-
-      subcommand="${*:3}"
-
-      if [[ -n "$subcommand" ]]; then
-        subcommand="&& exec zsh && ${subcommand[*]};"
-      fi
-
-      ssh c9 -t "$command $subcommand zsh -i;"
-    fi
-
-    BUNDLE_DIR="giftogram"
-    if [[ "$1" == "giftogram-order-site" || "$1" == "ordersite"  || "$1" == "order" ]]; then
-      PROJECT="$BUNDLE_DIR/ordersite/dev/api"
-    fi
-
-    if [[ "$1" == "api" ]]; then
-       PROJECT="$BUNDLE_DIR/api"
-    fi
-
-    if [[ "$1" == "common" ]]; then
-       PROJECT="$BUNDLE_DIR/common"
-    fi
-
-    if [[ "$1" == "giftogram-admin" || "$1" == "admin" ]]; then
-     PROJECT="$BUNDLE_DIR/admin/site"
-    fi
-
-    if [[ "$1" == "react" || "$1" == "frontend" ]]; then
-      PROJECT="$BUNDLE_DIR/frontend"
-    fi
+    . "$ZSH_FUNCTIONS/includes/c9.zsh"
+    . "$ZSH_FUNCTIONS/includes/giftogram.zsh"
   elif [[ "${ON_REMOTE}" == true ]]; then
-    if [[ "$1" == "giftogram-order-site" || "$1" == "ordersite"  || "$1" == "order" ]]; then
-      PROJECT="giftogram-order-site/dev/api"
-    fi
-
-    if [[ "$1" == "api" ]]; then
-      PROJECT="gg-api"
-    fi
-
-    if [[ "$1" == "giftogram-admin" || "$1" == "admin" ]]; then
-      PROJECT="giftogram-admin/site"
-    fi
+    . "$ZSH_FUNCTIONS/includes/remote.zsh"
   fi
 
-  local CODE_DIR
-  CODE_DIR="$ROOT_CODE_DIR/$PROJECT"
+  if [ ! -d "$code_dir" ]; then
+    echo "\"$code_dir\" not found."
+    return
+  fi
 
-  while test $# != 0
-  do
-      case "$1" in
-      -p) OPEN_PSTORM=true ;;
-      --) shift; break;;
-      esac
+  while test $# != 0; do
+    case "$1" in
+    -p) open_pstorm=true ;;
+    -s) start_app=true ;;
+    -rs) restart_app=true ;;
+    --)
       shift
+      break
+      ;;
+    esac
+    shift
   done
 
-  if [ ! -d "$CODE_DIR" ]; then
-      echo "\"$CODE_DIR\" not found."
-      return
+  # START/RESTART APP
+  if [[ "$start_app" == true || "$restart_app" == true ]]; then
+    if [[ "$code_dir" == *"frontend"* || "$code_dir" == *"react"* ]]; then
+      if [[ "$restart_app" == true ]]; then
+        local port_used=$(lsof -t -i:3000)
+        if [[ -n "$port_used" ]]; then
+          echo "Killing process on port 3000"
+          kill_port 3000
+          sleep .03
+        fi
+      fi
+
+      command="nvm use && npm run dev || npm run start"
+    fi
   fi
 
-  echo "$fg[green]Moving to: $CODE_DIR${reset_color}"
-  cd "$CODE_DIR" || exit 1;
+  echo "$fg[green]Moving to: $code_dir${reset_color}"
 
-  if [[ "$ON_LOCAL" == false  && "$OPEN_PSTORM" == true ]]; then
+  if [[ "$command" != "" ]]; then
+    echo "$fg[green]Running: $command${reset_color}"
+  fi
+
+  cd "$code_dir" || exit 1
+
+  if [[ "$command" != "" ]]; then
+    if [[ "$open_pstorm" == true ]]; then
+      echo "$fg[green]PHPStorm might not open${reset_color}"
+    fi
+
+    eval "$command"
+  fi
+
+  if [[ "$ON_LOCAL" == false && "$open_pstorm" == true ]]; then
     echo "Can not open directory in PHPStorm in this environment."
   fi
 
-  if [[ "$ON_LOCAL" == true && "$OPEN_PSTORM" == true ]]; then
+  if [[ "$ON_LOCAL" == true && "$open_pstorm" == true ]]; then
     phpstorm .
   fi
 }
-

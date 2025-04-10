@@ -2,8 +2,7 @@
 
 function kill_port() {
   local PORT=$1
-  local PID
-  PID=$(lsof -t -i:"$PORT")
+  local PID=$(lsof -t -i:"$PORT")
 
   if [[ -n "$PID" ]]; then
     echo "Killing process on port $PORT with PID $PID"
