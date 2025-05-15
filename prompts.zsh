@@ -14,18 +14,26 @@ function node_version_prompt_info() {
 }
 
 function laravel_prompt_info() {
-  composer_name=$(jq -r '.name' composer.json 2>/dev/null)
   if [[ -f artisan && ! -d './vendor' ]]; then
     echo "
-|  %{$FG[166]%}Laravel Framework:%{$reset_color%} %{$FG[009]%}Not Installed%{$reset_color%} "
+  |  %{$FG[166]%}Laravel Framework:%{$reset_color%} %{$FG[009]%}Not Installed%{$reset_color%} "
     return
   fi
 
+  composer_name=$(jq -r '.name' composer.json 2>/dev/null)
+  return
   if [[ -f artisan && "$composer_name" != 'giftogram/gg-common' ]]; then
     laravel_version=$(php artisan --version)
-    laravel_version="${laravel_version/Laravel Framework /}"
-    echo "
-|  %{$FG[166]%}Laravel Framework:%{$reset_color%} %{$FG[009]%}$laravel_version%{$reset_color%} "
+    result=$(echo "$laravel_version" | sed -E 's/^Laravel\sFramework\s([0-9]{2}.[0-9]{1,2}.[0-9]{1,2})$/\1/')
+    echo "$result"
+    return
+    #    if [[ $laravel_version =~ ^Laravel\sFramework\s([0-9]{2}.[0-9]{1,2}.[0-9]{1,2})$ ]]; then
+    #      echo "${BEST_REMATCH[0]}"
+    #      version=$(echo $laravel_version | tail -1 | awk -F' ' '{print $3}')
+    #      laravel_version="${laravel_version/Laravel Framework /}"
+    #      echo "
+    #|  %{$FG[166]%}Laravel Framework:%{$reset_color%} %{$FG[009]%}$version%{$reset_color%} "
+    #    fi
   fi
 }
 
@@ -41,7 +49,6 @@ function gg_common_version_prompt_info() {
       if [[ "$content" == "" ]]; then
         return
       fi
-
     fi
 
     version=$(get_cached_gg_common_version)
@@ -54,7 +61,7 @@ function gg_common_version_prompt_info() {
 
 function get_cached_gg_common_version() {
   if [[ -z "$GG_COMMON_VERSION_CACHE" ]]; then
-    GG_COMMON_VERSION_CACHE=$(gg_common_version)
+    GG_COMMON_VERSION_CACHE=$(gg_common_version)no
   fi
   echo "$GG_COMMON_VERSION_CACHE"
 }

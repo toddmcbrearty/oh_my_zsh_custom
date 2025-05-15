@@ -27,6 +27,6 @@ function git_merge_branch() {
 
   git update-ref "refs/heads/$branch" "refs/heads/$branch"
 
-  echo "$fg[blue]Merging $branch into ${branch_name}${reset_color}"
+  echo "$fg[orange]Merging $branch into ${branch_name}${reset_color}"
   git merge "$branch"
 }

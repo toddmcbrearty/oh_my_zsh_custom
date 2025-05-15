@@ -1,44 +1,41 @@
 #!/bin/zsh zsh
-
 function makealias() {
-    if [[ "$1" == "help" || -z $1 || -z $2 || -z $3 ]]; then
-        echo "Usage: makealias <group> <alias-name> <action>"
-        echo "  <help>        : Show usage."
-        echo "  <group>       : The file name to save the alias under in ~/.aliases/"
-        echo "  <alias-name>   : The name of the alias to create"
-        echo "  <action>      : The command the alias will perform"
-        return;
-    fi
+  if [[ "$1" == "help" || -z $1 || -z $2 || -z $3 ]]; then
+    echo "Usage: makealias <group> <alias-name> <action>"
+    echo "  <help>        : Show usage."
+    echo "  <group>       : The file name to save the alias under in ~/.aliases/"
+    echo "  <alias-name>   : The name of the alias to create"
+    echo "  <action>      : The command the alias will perform"
+    return
+  fi
 
-    cwd=$(pwd)
+  cwd=$(pwd)
 
-    cd "$ZSH_ALIASES" ||
-
+  cd "$ZSH_ALIASES" ||
     if grep -Eq "\balias $2\b" "$1"; then
-        echo "The command $2 already exists. Do you want to overwrite it? [Y, n]"
-        read -r stop
+      echo "The command $2 already exists. Do you want to overwrite it? [Y, n]"
+      read -r stop
 
-        if [[ -z "$stop" ]]; then
-            stop="Y"
-        fi
+      if [[ -z "$stop" ]]; then
+        stop="Y"
+      fi
 
-        if [[ "$stop" != 'Y' && "$stop" != 'y' ]]; then
-            echo "Exiting..."
-            return
-        fi
+      if [[ "$stop" != 'Y' && "$stop" != 'y' ]]; then
+        echo "Exiting..."
+        return
+      fi
 
-        sed -i.bak "/alias $2=\"$3\"/d" "./$1"
-        rm "./$1.bak"
+      sed -i.bak "/alias $2=\"$3\"/d" "./$1"
+      rm "./$1.bak"
     fi
 
-    # append to the aliases file
-    printf "alias %s=\"%s\"\n" "$2" "$3" >>"./$1"
+  # append to the aliases file
+  printf "alias %s=\"%s\"\n" "$2" "$3" >>"./$1"
 
-    chmod +x "./$1"
-    # shellcheck disable=SC1090
-    . "./$1"
+  chmod +x "./$1"
+  . "./$1"
 
-    cd "$cwd" || exit 1
+  cd "$cwd" || exit 1
 
-    echo "Alias $2 create"
+  echo "Alias $2 create"
 }

@@ -1,5 +1,5 @@
 #!/bin/zsh zsh
- LOCAL_ONLY=false
+LOCAL_ONLY=false
 
 if [[ "$IAM" == "$LOCAL_MACHINE_NAME" ]]; then
   LOCAL_ONLY=true
@@ -7,5 +7,4 @@ fi
 
 if [[ "$LOCAL_ONLY" == true ]]; then
   alias sr="to frontend && nvm use && npm run dev"
-
 fi
