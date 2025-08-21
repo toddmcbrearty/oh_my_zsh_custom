@@ -70,3 +70,4 @@ source <(cd "$ZSH_CUSTOM/autocompletes" && cat ./*)
 
 source <(cd "$ZSH_ALIASES" && cat ./*)
 chmod +x <(cd "$ZSH_ALIASES" && cat ./*)
+

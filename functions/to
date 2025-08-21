@@ -1,5 +1,41 @@
 #!/bin/zsh zsh
 
+function help() {
+cat <<EOF
+      Usage: to [OPTIONS] <project_name>
+
+      This script navigates to project directories based on predefined rules and can optionally open the directory in PHPStorm for specific users.
+
+      Arguments:
+        project_name       Name of the project to navigate to. Matches specific keywords to determine the correct directory.
+
+      Options:
+        -p                 Open the directory in PHPStorm (only works in the "todd" user environment).
+        --                 Indicates the end of options.
+
+      Environment Variables:
+        ROOT_CODE_DIR      This variable must be set. Represents the root directory containing the project folders.
+                           Ensure it is set in '~/.oh-my-zsh/loader.sh'.
+        IAM                Identifies the current user.
+                           Options:
+                             - "todd": Allows opening projects in PHPStorm.
+                             - "ubuntu": Uses specific rules to map project names to directories.
+
+      Examples:
+        to ordersite       Navigate to the "ordersite" project directory.
+        to -p admin        Navigate to the "admin" project directory and open it in PHPStorm (only if IAM='todd').
+
+      Autocompletion:
+        - This script supports tab autocompletion for project names and the $(-p) option.
+        - Autocompletion derives directories from the contents of the ROOT_CODE_DIR variable.
+
+      Notes:
+        - If the project directory does not exist, an error will be displayed.
+        - If the ROOT_CODE_DIR variable is not set, the script will abort with a message.
+
+EOF
+}
+
 function to() {
   if [[ -z "$ROOT_CODE_DIR" ]]; then
     echo "ROOT_CODE_DIR is not set. Please set it in '~/.oh-my-zsh/env.zsh'."
@@ -7,39 +43,7 @@ function to() {
   fi
 
   if [[ "$1" == "help" ]]; then
-    cat <<EOF
-    Usage: to [OPTIONS] <project_name>
-
-    This script navigates to project directories based on predefined rules and can optionally open the directory in PHPStorm for specific users.
-
-    Arguments:
-      project_name       Name of the project to navigate to. Matches specific keywords to determine the correct directory.
-
-    Options:
-      -p                 Open the directory in PHPStorm (only works in the "todd" user environment).
-      --                 Indicates the end of options.
-
-    Environment Variables:
-      ROOT_CODE_DIR      This variable must be set. Represents the root directory containing the project folders.
-                         Ensure it is set in '~/.oh-my-zsh/loader.sh'.
-      IAM                Identifies the current user.
-                         Options:
-                           - "todd": Allows opening projects in PHPStorm.
-                           - "ubuntu": Uses specific rules to map project names to directories.
-
-    Examples:
-      to ordersite       Navigate to the "ordersite" project directory.
-      to -p admin        Navigate to the "admin" project directory and open it in PHPStorm (only if IAM='todd').
-
-    Autocompletion:
-      - This script supports tab autocompletion for project names and the $(-p) option.
-      - Autocompletion derives directories from the contents of the ROOT_CODE_DIR variable.
-
-    Notes:
-      - If the project directory does not exist, an error will be displayed.
-      - If the ROOT_CODE_DIR variable is not set, the script will abort with a message.
-
-EOF
+    help
     return
   fi
 
@@ -52,7 +56,8 @@ EOF
 
   if [[ "${ON_LOCAL}" == true ]]; then
     . "$ZSH_FUNCTIONS/includes/c9.zsh"
-    . "$ZSH_FUNCTIONS/includes/giftogram.zsh"
+#    . "$ZSH_FUNCTIONS/includes/giftogram-local.zsh"
+    . "$ZSH_FUNCTIONS/includes/giftogram-docker.zsh"
   elif [[ "${ON_REMOTE}" == true ]]; then
     . "$ZSH_FUNCTIONS/includes/remote.zsh"
   fi

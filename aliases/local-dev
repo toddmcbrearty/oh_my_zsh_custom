@@ -1,0 +1,5 @@
+alias local-make="cd /Users/todd/Code/giftogram/local-dev && make"
+alias shreact="local-make shell-into-gg-react"
+alias shadmin="local-make shell-into-gg-admin"
+alias shos="local-make shell-into-gg-order-site"
+alias shapi="local-make shell-into-gg-api"
