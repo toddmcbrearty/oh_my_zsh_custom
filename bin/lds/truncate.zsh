@@ -1,24 +1,31 @@
-if [[ "$1" == 'truncate' ]]; then
-  if [[ "$2" == 'api' ]]; then
+#!/bin/zsh
+
+function success() {
+  echo "$fg[green]Log(s) have been truncated.${reset_color}"
+  exit 0
+}
+
+if [[ "$COMMAND_TO_RUN" == 'truncate' ]]; then
+  if [[ "$PARAMETER1" == 'api' ]]; then
     truncate -s 0 "$LOCAL_DEV_PATH/gg-api/storage/logs/laravel.log"
-    exit 0
+    success
   fi
-  if [[ "$2" == 'ordersite' || "$2" == "os" ]]; then
+  if [[ "$PARAMETER1" == 'ordersite' || "$PARAMETER1" == "os" ]]; then
     truncate -s 0 "$LOCAL_DEV_PATH/giftogram-order-site/dev/api/storage/logs/laravel.log"
-    exit 0
+    success
   fi
-  if [[ "$2" == 'admin' ]]; then
+  if [[ "$PARAMETER1" == 'admin' ]]; then
     truncate -s 0 "$LOCAL_DEV_PATH/giftogram-admin/site/storage/logs/laravel.log"
-    exit 0
+    success
   fi
 
-  if [[ "$2" == 'all' ]]; then
+  if [[ "$PARAMETER1" == 'all' ]]; then
     truncate -s 0 "$GGAPI_PATH/storage/logs/laravel.log"
     truncate -s 0 "$ORDERSITE_PATH/storage/logs/laravel.log"
     truncate -s 0 "$ADMIN_PATH/storage/logs/laravel.log"
-    exit 0
+    success
   fi
 
-  echo "Invalid log passed"
+  echo "$fg[red]Invalid log passed${reset_color}"
   exit 1
 fi

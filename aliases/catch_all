@@ -1,4 +1,4 @@
-#!/bin/zsh zsh
+#!/bin/zsh
 
 alias srczsh="source \$HOME/.zshrc"
 alias zshrc="\$EDITOR \$HOME/.zshrc"

@@ -1,4 +1,4 @@
-#!/bin/zsh zsh
+#!/bin/zsh
 
 function good_morning() {
   echo "Good morning, $USER!"

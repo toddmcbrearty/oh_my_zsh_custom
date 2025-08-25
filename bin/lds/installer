@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+
+autoload -U colors && colors
+
+SCRIPT_PATH=$(readlink -f "$0")
+SCRIPT_DIR=$(dirname "$SCRIPT_PATH")
+
+chmod +x "$SCRIPT_DIR"/*.zsh || exit 1
+
+SCRIPT="/usr/local/bin/lds"
+
+if [[ -f "$SCRIPT" ]]; then
+  echo "lds already exists, would you like to overwrite it? [n/Y]"
+  read -r overwrite
+
+  if [[ "$overwrite" != "Y" && "$overwrite" != "y" && "$overwrite" != "" ]]; then
+    exit 0
+  fi
+
+  sudo rm -rf "$SCRIPT"
+fi
+
+sudo ln -s "$SCRIPT_DIR/local-dev-server.zsh" "$SCRIPT"
+
+chmod 655 "$SCRIPT_DIR/installer"
+
+echo "lds is ready to use"
+lds -h
+
+exec zsh

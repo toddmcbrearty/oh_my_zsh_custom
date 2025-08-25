@@ -1,4 +1,4 @@
-#!/bin/zsh zsh
+#!/bin/zsh
 
 alias gitcm="git checkout master && git pull"
 alias gitreset="git reset --hard HEAD && git clean -f -d"

@@ -1,4 +1,4 @@
-#!/bin/zsh zsh
+#!/bin/zsh
 function symcommon() {
    LOCAL_ONLY=false
 

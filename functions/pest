@@ -1,4 +1,4 @@
-#!/bin/zsh zsh
+#!/bin/zsh
 
 pest() {
   if [[ ! -f "vendor/bin/pest" ]]; then

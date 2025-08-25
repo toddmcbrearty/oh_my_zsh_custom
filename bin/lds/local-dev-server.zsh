@@ -1,89 +1,40 @@
 #!/bin/zsh
 
 # Don't forget to chmod +x this script
-LOCAL_DEV_PATH="$HOME/Code/giftogram/local-dev"
-REACT_PATH="$LOCAL_DEV_PATH/gg-react"
-GGAPI_PATH="$LOCAL_DEV_PATH/gg-api"
-ORDERSITE_PATH="$LOCAL_DEV_PATH/giftogram-order-site/dev/api"
-COMMON_PATH="$LOCAL_DEV_PATH/gg-common"
-ADMIN_PATH="$LOCAL_DEV_PATH/giftogram-admin/site"
+export LOCAL_DEV_PATH="$HOME/Code/giftogram/local-dev"
+export REACT_PATH="$LOCAL_DEV_PATH/gg-react"
+export GGAPI_PATH="$LOCAL_DEV_PATH/gg-api"
+export ORDERSITE_PATH="$LOCAL_DEV_PATH/giftogram-order-site/dev/api"
+export COMMON_PATH="$LOCAL_DEV_PATH/gg-common"
+export ADMIN_PATH="$LOCAL_DEV_PATH/giftogram-admin/site"
+export REPOS=("$GGAPI_PATH" "$REACT_PATH" "$ORDERSITE_PATH" "$COMMON_PATH" "$ADMIN_PATH")
+export COMMAND_TO_RUN
+export PARAMETER1
+# Change this to whatever you want it to be
+export LDS_SESSION_NAME="gg_dev_session"
+
+SCRIPT_PATH=$(readlink -f "$0")
+LDS_SCRIPT_DIR=$(dirname "$SCRIPT_PATH")
+
+# Load in all the functions
+source "$LDS_SCRIPT_DIR/functions.zsh"
 
 autoload -U colors && colors
 
-SESSION_NAME="gg_dev_session"
-
-function show_help() {
-  echo "Usage: $0 [options]"
-  echo ""
-  echo "Parameters:"
-  echo "  make          Run a make command from local-dev"
-  echo ""
-  echo "Options:"
-  echo "  -k            Kill the react and admin processes and terminate the tmux session."
-  echo "  -a            Attach to the existing tmux session."
-  echo "  -h, --help    Display this help message and exit."
-  echo ""
-  echo "Description:"
-  echo "This script manages a tmux session for local development."
-  echo "It can create sessions, attach to them, kill running processes, or terminate the session entirely."
-  echo ""
-  echo "Default Behavior:"
-  echo "If no flag is passed, the script will check whether the session exists:"
-  echo "  - If it exists, it will prompt to attach to it."
-  echo "  - If it doesn't exist, it will create a new session with the predefined structure."
-  exit 0
-}
-
-function kill_react() {
-  tmux send-keys -t "$SESSION_NAME":0 "sudo fuser -k 3000/tcp" C-m
-}
-function start_react() {
-  tmux send-keys -t "$SESSION_NAME":0 "cd $LOCAL_DEV_PATH && make shell-into-gg-react" C-m
-  tmux send-keys -t "$SESSION_NAME":0 "npm run dev" C-m
-}
-
-function kill_admin() {
-  tmux send-keys -t "$SESSION_NAME":0.1 "sudo fuser -k 3000/tcp" C-m
-}
-function start_admin() {
-  tmux send-keys -t "$SESSION_NAME":0.1 "cd $LOCAL_DEV_PATH && make shell-into-gg-admin" C-m
-  tmux send-keys -t "$SESSION_NAME":0.1 "npm run build" C-m
-}
-
-function attach_to_session() {
-  tmux attach -t "$SESSION_NAME":0
-  exit 0
-}
-
-if [[ "$1" == "-h" || "$1" == "help" ]]; then
+# show help
+if [[ "$1" == "-h" || "$1" == "--help" || "$1" == "help" ]]; then
   show_help
 fi
 
-source ./make.zsh
-source ./attach.zsh
-source ./kill.zsh
-source ./truncate.zsh
-source ./restart.zsh
-source ./git.zsh
+# this allows the sourced files to read the parameters
+COMMAND_TO_RUN="$1"
+PARAMETER1="$2"
 
-#DO NOT ADD ANY MORE PARAMETER OPTIONS AFTER THIS
-# an unknown argument was passed
-if [[ "$1" != "" ]]; then
-  echo "Param not recognized: $1"
-  show_help
-fi
-
-if tmux has-session -t "$SESSION_NAME":0 2>/dev/null; then
-  echo "This session already exists. Would you like to attach to it? [n/Y]"
-  read -r attach
-
-  if [[ "$attach" == "" || "$attach" == "Y" || "$attach" == "Y" ]]; then
-    echo "Attaching $SESSION_NAME"
-    attach_to_session
-  fi
-
-  exit 0
-fi
-
-#IF YOU'VE MADE IT THIS FAR THEN WE'LL CREATE THE SESSION
-source ./create-session.zsh
+source "$LDS_SCRIPT_DIR/make.zsh"
+source "$LDS_SCRIPT_DIR/attach.zsh"
+source "$LDS_SCRIPT_DIR/kill.zsh"
+source "$LDS_SCRIPT_DIR/truncate.zsh"
+source "$LDS_SCRIPT_DIR/restart.zsh"
+source "$LDS_SCRIPT_DIR/git.zsh"
+source "$LDS_SCRIPT_DIR/create-session.zsh"
+source "$LDS_SCRIPT_DIR/choose-action.zsh"

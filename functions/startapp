@@ -1,4 +1,4 @@
-#!/bin/zsh zsh
+#!/bin/zsh
 
 function startapp() {
   local dev_apps

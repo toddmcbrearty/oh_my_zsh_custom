@@ -1,4 +1,4 @@
-#!/bin/zsh zsh
+#!/bin/zsh
 
 if [[ "$IAM" == "$LOCAL_MACHINE_NAME" ]]; then
   alias toc9="ssh c9"
